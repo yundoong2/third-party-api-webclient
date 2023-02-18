@@ -1,9 +1,6 @@
 package study.thirdpartyapiwebclient.services.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@Builder
+@NoArgsConstructor
 /**
  * BoardDto 설명
  *

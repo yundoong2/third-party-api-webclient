@@ -1,11 +1,10 @@
 package study.thirdpartyapiwebclient.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import study.thirdpartyapiwebclient.controller.dto.BoardInput;
 import study.thirdpartyapiwebclient.services.BoardExternalService;
 import study.thirdpartyapiwebclient.services.dto.BoardDto;
 
@@ -37,25 +36,78 @@ public class BoardController {
      * @since 2023-02-14
      * </pre>
      **/
-    @GetMapping(value = {"/", "/list", "/board/list"})
-    public Flux<BoardDto> getBoardList() {
+    @GetMapping(value = {"/", "/externBoard/list"})
+    public List<BoardDto> getBoardList() {
         return service.GetBoardList();
     }
 
     /**
      * getPost 설명
      *
-     <pre>
+     * <pre>
      * - 게시판 특정 게시글 조회 Method
      * @param id {@link Long}
-     * @return 
-     * @throw 
+     * @return
+     * @throw
      * @author cyh68
      * @since 2023-02-15
+     * </pre>
+     **/
+    @GetMapping(value = "/externBoard/list/{id}")
+    public BoardDto getPost(@PathVariable Long id) {
+        return service.GetPostById(id);
+    }
+
+    /**
+     * addPost 설명
+     *
+     * <pre>
+     * - 게시글 등록 Method
+     * @param input {@link BoardInput}
+     * @return Mono BoardDto
+     * @throw
+     * @author cyh68
+     * @since 2023-02-16
+     * </pre>
+     **/
+    @PostMapping(value = "/externBoard/list")
+    public BoardDto addPost(@RequestBody BoardInput input) {
+        return service.AddPost(input);
+    }
+
+    /**
+     * putPost 설명
+     *
+     * <pre>
+     * - 게시글 내용 전체 수정 Method
+     * @param id {@link Long}
+     * @param input {@link BoardInput}
+     * @return BoardDto
+     * @throw
+     * @author cyh68
+     * @since 2023-02-16
+     * </pre>
+     **/
+    @PutMapping(value = "/externBoard/list/{id}")
+    public BoardDto putPost(@PathVariable Long id, @RequestBody BoardInput input) {
+        return service.putPost(id, input);
+    }
+
+    /**
+     * patchPost 설명
+     *
+     <pre>
+     * - 게시글 내용 부분 수정 Method
+     * @param id {@link Long}
+     * @param input {@link BoardInput}
+     * @return BoardDto
+     * @throw 
+     * @author cyh68
+     * @since 2023-02-17
      </pre>
      **/
-    @GetMapping(value = "/board/list/{id}")
-    public Mono<BoardDto> getPost(@PathVariable Long id) {
-        return service.GetBoardById(id);
+    @PatchMapping(value = "/externBoard/list/{id}")
+    public BoardDto patchPost(@PathVariable Long id, @RequestBody BoardInput input) {
+        return service.patchPost(id, input);
     }
 }

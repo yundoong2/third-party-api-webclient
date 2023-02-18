@@ -27,7 +27,7 @@ public class WebClientConfig {
 
         //in-memory buffer 값이 Default로 256KB로 해당 값보다 큰 HTTP 메시지를 처리하기 위해 아래와 같이 사용
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024*1024*50))
+                .codecs(configure -> configure.defaultCodecs().maxInMemorySize(1024*1024*50))
                 .build();
 
         return WebClient.builder()
