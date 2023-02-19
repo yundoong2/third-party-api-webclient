@@ -8,8 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import study.thirdpartyapiwebclient.common.constants.CustomErrorCode;
+import study.thirdpartyapiwebclient.config.exception.CustomErrorResponse;
+import study.thirdpartyapiwebclient.config.exception.CustomException;
 import study.thirdpartyapiwebclient.controller.dto.BoardInput;
 import study.thirdpartyapiwebclient.services.dto.BoardDto;
 
@@ -39,17 +44,29 @@ public class BoardExternalService {
      *
      * <pre>
      * - 외부 게시판 API를 통해 전체 게시글을 조회한다
-     * @return LIst BoardDto
-     * @throw
+     * @return LIst BoardDto {@link BoardDto}
+     * @throw CustomException {@link CustomException}
      * @author cyh68
      * @since 2023-02-14
      * </pre>
      **/
-    public List<BoardDto> GetBoardList() {
+    public List<BoardDto> getBoardList() {
+        UriComponents uriComponents = UriComponentsBuilder
+                .fromPath("/board/list")
+                .build(false);
+
         List<BoardDto> dtoFlux = webClient.get()
-                .uri("/board/list")
+                .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.BAD_REQUEST_ERROR))));
+                })
+                .onStatus(HttpStatus::is5xxServerError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.INTERNAL_SERVER_ERROR))));
+                })
                 .bodyToFlux(BoardDto.class)
                 .collectList()
                 .block();
@@ -65,17 +82,29 @@ public class BoardExternalService {
      * <pre>
      * - - 외부 게시판 API를 통해 특정 게시글을 조회한다
      * @param id {@link Long}
-     * @return Mono BoardDto
-     * @throw
+     * @return BoardDto {@link BoardDto}
+     * @throw CustomException {@link CustomException}
      * @author cyh68
      * @since 2023-02-15
      * </pre>
      **/
-    public BoardDto GetPostById(Long id) {
+    public BoardDto getPostById(Long id) {
+        UriComponents uriComponents = UriComponentsBuilder
+                .fromPath("/board/list" + id)
+                .build(false);
+
         BoardDto dtoMono = webClient.get()
-                .uri("/board/list/" + id)
+                .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.BAD_REQUEST_ERROR))));
+                })
+                .onStatus(HttpStatus::is5xxServerError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.INTERNAL_SERVER_ERROR))));
+                })
                 .bodyToMono(BoardDto.class)
                 .block();
 
@@ -90,18 +119,30 @@ public class BoardExternalService {
      * <pre>
      * - 외부 게시판 API를 통해 게시글을 등록한다
      * @param input {@link BoardInput}
-     * @return BoardDto
-     * @throw
+     * @return BoardDto {@link BoardDto}
+     * @throw CustomException {@link CustomException}
      * @author cyh68
      * @since 2023-02-16
      * </pre>
      **/
-    public BoardDto AddPost(BoardInput input) {
+    public BoardDto addPost(BoardInput input) {
+        UriComponents uriComponents = UriComponentsBuilder
+                .fromPath("/board/list")
+                .build(false);
+
         BoardDto dtoMono = webClient.post()
-                .uri("/board/list")
+                .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(input), BoardInput.class)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.BAD_REQUEST_ERROR))));
+                })
+                .onStatus(HttpStatus::is5xxServerError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.INTERNAL_SERVER_ERROR))));
+                })
                 .bodyToMono(BoardDto.class)
                 .block();
 
@@ -117,19 +158,30 @@ public class BoardExternalService {
      * - 외부 게시판 API를 통해 게시글을 수정한다(전체 수정)
      * @param id {@link Long}
      * @param input {@link BoardInput}
-     * @return Mono BoardDto
-     * @throw
+     * @return BoardDto {@link BoardDto}
+     * @throw CustomException {@link CustomException}
      * @author cyh68
      * @since 2023-02-16
      * </pre>
      **/
     public BoardDto putPost(Long id, BoardInput input) {
+        UriComponents uriComponents = UriComponentsBuilder
+                .fromPath("/board/list/" + id)
+                .build(false);
 
         BoardDto dto = webClient.put()
-                .uri("/board/list/" + id)
+                .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(input), BoardInput.class)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.BAD_REQUEST_ERROR))));
+                })
+                .onStatus(HttpStatus::is5xxServerError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.INTERNAL_SERVER_ERROR))));
+                })
                 .bodyToMono(BoardDto.class)
                 .block();
 
@@ -143,18 +195,30 @@ public class BoardExternalService {
      * - 외부 게시판 API를 통해 게시글을 수정한다(부분 수정)
      * @param id {@link Long}
      * @param input {@link BoardInput}
-     * @return Mono BoardDto
-     * @throw
+     * @return BoardDto {@link BoardDto}
+     * @throw CustomException {@link CustomException}
      * @author cyh68
      * @since 2023-02-16
      * </pre>
      **/
     public BoardDto patchPost(Long id, BoardInput input) {
+        UriComponents uriComponents = UriComponentsBuilder
+                .fromPath("/board/list/" + id)
+                .build(false);
+
         BoardDto dto = webClient.patch()
-                .uri("/board/list/" + id)
+                .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(input), BoardInput.class)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.BAD_REQUEST_ERROR))));
+                })
+                .onStatus(HttpStatus::is5xxServerError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.INTERNAL_SERVER_ERROR))));
+                })
                 .bodyToMono(BoardDto.class)
                 .block();
 
@@ -167,17 +231,29 @@ public class BoardExternalService {
      <pre>
      * - 외부 게시판 API를 통해 게시물을 삭제한다
      * @param id {@link Long}
-     * @return ResponseEntity HttpStatus
-     * @throw 
+     * @return ResponseEntity HttpStatus {@link ResponseEntity}
+     * @throw CustomException {@link CustomException}
      * @author cyh68
      * @since 2023-02-17
      </pre>
      **/
     public ResponseEntity<HttpStatus> deletePost(@PathVariable Long id) {
+        UriComponents uriComponents = UriComponentsBuilder
+                .fromPath("/board/list/" + id)
+                .build(false);
+
         ResponseEntity dto = webClient.delete()
-                .uri("/board/list/" + id)
+                .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.BAD_REQUEST_ERROR))));
+                })
+                .onStatus(HttpStatus::is5xxServerError, response -> {
+                    return response.createException()
+                            .flatMap(it -> Mono.error((new CustomException(CustomErrorCode.INTERNAL_SERVER_ERROR))));
+                })
                 .bodyToMono(ResponseEntity.class)
                 .block();
 
