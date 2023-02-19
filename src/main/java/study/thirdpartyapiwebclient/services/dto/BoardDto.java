@@ -2,6 +2,7 @@ package study.thirdpartyapiwebclient.services.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
  * @since 2023-02-12
 </pre>
  **/
-public class BoardDto {
+public class BoardDto implements Serializable {
     //게시글 ID
     private Long id;
     //게시글 제목

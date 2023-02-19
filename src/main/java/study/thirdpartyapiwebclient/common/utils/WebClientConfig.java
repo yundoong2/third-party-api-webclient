@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Collections;
 
+import static study.thirdpartyapiwebclient.common.constants.Constants.URL;
+
 
 /**
  * WebClientConfig 설명
@@ -31,9 +33,9 @@ public class WebClientConfig {
                 .build();
 
         return WebClient.builder()
-                .baseUrl("http://localhost:8080")
+                .baseUrl(URL)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8080"))
+                .defaultUriVariables(Collections.singletonMap("url", URL))
                 .build();
     }
 }
