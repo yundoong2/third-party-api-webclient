@@ -1,15 +1,12 @@
 package study.thirdpartyapiwebclient.config.exception;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
-import study.thirdpartyapiwebclient.common.constants.CustomErrorCode;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class CustomErrorResponse {
+public class BadRequestException extends RuntimeException {
     private HttpStatus status;
     private String message;
 }

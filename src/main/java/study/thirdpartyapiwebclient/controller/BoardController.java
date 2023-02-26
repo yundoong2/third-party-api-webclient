@@ -83,11 +83,9 @@ public class BoardController {
     @PostMapping(value = "/externBoard/list")
     public BaseResponse addPost(@RequestBody BoardInput input) {
         if (input == null ||
-            input.getId() == null ||
-            input.getTitle() == null ||
-            input.getContent() == null ||
-            input.getWriter() == null ||
-            input.getRegDate() == null) {
+                input.getTitle() == null ||
+                input.getContent() == null ||
+                input.getWriter() == null) {
             throw new CustomException(CustomErrorCode.INVALID_REQUEST_BODY_ERROR);
         }
 
@@ -119,7 +117,7 @@ public class BoardController {
                 input.getTitle() == null ||
                 input.getContent() == null ||
                 input.getWriter() == null ||
-                input.getRegDate() == null) {
+                input.getHit() == null) {
             throw new CustomException(CustomErrorCode.INVALID_REQUEST_BODY_ERROR);
         }
 
@@ -146,12 +144,7 @@ public class BoardController {
         if (id == 0)
             throw new CustomException(CustomErrorCode.INVALID_REQUEST_ID_ERROR);
 
-        if (input == null ||
-                input.getId() == null ||
-                input.getTitle() == null ||
-                input.getContent() == null ||
-                input.getWriter() == null ||
-                input.getRegDate() == null) {
+        if (input == null || input.getId() == null) {
             throw new CustomException(CustomErrorCode.INVALID_REQUEST_BODY_ERROR);
         }
 
@@ -163,14 +156,14 @@ public class BoardController {
     /**
      * deletePPost 설명
      *
-     <pre>
+     * <pre>
      * - 게시글 삭제 Method
      * @param id {@link Long}
      * @return ResponseEntity {@link org.springframework.http.ResponseEntity}
      * @throw CustomException {@link CustomException}
      * @author cyh68
      * @since 2023-02-19
-     </pre>
+     * </pre>
      **/
     public BaseResponse deletePPost(@PathVariable Long id) {
         if (id == 0)

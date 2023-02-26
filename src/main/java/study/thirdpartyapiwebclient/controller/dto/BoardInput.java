@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,8 +21,11 @@ import java.time.LocalDateTime;
  **/
 public class BoardInput {
     private Long id;
+    @NotNull @NotBlank
     private String title;
+    @NotNull @NotBlank
     private String content;
+    @NotNull @NotBlank
     private String writer;
     @JsonProperty("reg_date")
     private LocalDateTime regDate;

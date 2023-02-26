@@ -10,18 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import study.thirdpartyapiwebclient.common.constants.CustomErrorCode;
-import study.thirdpartyapiwebclient.config.exception.CustomErrorResponse;
 import study.thirdpartyapiwebclient.config.exception.CustomException;
 import study.thirdpartyapiwebclient.controller.dto.BoardInput;
 import study.thirdpartyapiwebclient.services.dto.BoardDto;
 
-import javax.swing.text.html.Option;
-import java.awt.*;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * BoardExternalService 설명
@@ -53,9 +48,9 @@ public class BoardExternalService {
     public List<BoardDto> getBoardList() {
         UriComponents uriComponents = UriComponentsBuilder
                 .fromPath("/board/list")
-                .build(false);
+                .build(true);
 
-        List<BoardDto> dtoFlux = webClient.get()
+        List<BoardDto> result = webClient.get()
                 .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -71,9 +66,9 @@ public class BoardExternalService {
                 .collectList()
                 .block();
 
-        //dtoFlux.subscribe(boardDto -> log.info(String.valueOf(boardDto)));
+        //result.subscribe(boardDto -> log.info(String.valueOf(boardDto)));
 
-        return dtoFlux;
+        return result;
     }
 
     /**
@@ -90,10 +85,10 @@ public class BoardExternalService {
      **/
     public BoardDto getPostById(Long id) {
         UriComponents uriComponents = UriComponentsBuilder
-                .fromPath("/board/list" + id)
+                .fromPath("/board/list/" + id)
                 .build(false);
 
-        BoardDto dtoMono = webClient.get()
+        BoardDto result = webClient.get()
                 .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -108,9 +103,9 @@ public class BoardExternalService {
                 .bodyToMono(BoardDto.class)
                 .block();
 
-        //dtoMono.subscribe(boardDto -> log.info(String.valueOf(boardDto)));
+        //result.subscribe(boardDto -> log.info(String.valueOf(boardDto)));
 
-        return dtoMono;
+        return result;
     }
 
     /**
@@ -130,7 +125,7 @@ public class BoardExternalService {
                 .fromPath("/board/list")
                 .build(false);
 
-        BoardDto dtoMono = webClient.post()
+        BoardDto result = webClient.post()
                 .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(input), BoardInput.class)
@@ -146,9 +141,9 @@ public class BoardExternalService {
                 .bodyToMono(BoardDto.class)
                 .block();
 
-        //dtoMono.subscribe(boardDto -> log.info(String.valueOf(boardDto)));
+        //result.subscribe(boardDto -> log.info(String.valueOf(boardDto)));
 
-        return dtoMono;
+        return result;
     }
 
     /**
@@ -169,7 +164,7 @@ public class BoardExternalService {
                 .fromPath("/board/list/" + id)
                 .build(false);
 
-        BoardDto dto = webClient.put()
+        BoardDto result = webClient.put()
                 .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(input), BoardInput.class)
@@ -185,7 +180,7 @@ public class BoardExternalService {
                 .bodyToMono(BoardDto.class)
                 .block();
 
-        return dto;
+        return result;
     }
 
     /**
@@ -206,7 +201,7 @@ public class BoardExternalService {
                 .fromPath("/board/list/" + id)
                 .build(false);
 
-        BoardDto dto = webClient.patch()
+        BoardDto result = webClient.patch()
                 .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(input), BoardInput.class)
@@ -222,7 +217,7 @@ public class BoardExternalService {
                 .bodyToMono(BoardDto.class)
                 .block();
 
-        return dto;
+        return result;
     }
 
     /**
@@ -242,7 +237,7 @@ public class BoardExternalService {
                 .fromPath("/board/list/" + id)
                 .build(false);
 
-        ResponseEntity dto = webClient.delete()
+        ResponseEntity result = webClient.delete()
                 .uri(uriComponents.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -257,6 +252,6 @@ public class BoardExternalService {
                 .bodyToMono(ResponseEntity.class)
                 .block();
 
-        return dto;
+        return result;
     }
 }
