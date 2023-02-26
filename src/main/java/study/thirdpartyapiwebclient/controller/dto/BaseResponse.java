@@ -3,6 +3,7 @@ package study.thirdpartyapiwebclient.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
@@ -17,6 +18,7 @@ import java.io.Serializable;
  * @since 2023-02-19
  **/
 public class BaseResponse implements Serializable {
+    private HttpStatus status;
     private String message;
     private Object data;
 
@@ -24,7 +26,13 @@ public class BaseResponse implements Serializable {
         this.setMessage("Success");
     }
 
+    public BaseResponse(HttpStatus status, String message) {
+        this.status = status;
+        this.message = message;
+    }
+
     public BaseResponse success(Object data) {
+        this.setStatus(HttpStatus.OK);
         this.setMessage("Success");
         this.setData(data);
         return this;

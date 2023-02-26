@@ -1,17 +1,18 @@
 package study.thirdpartyapiwebclient.config.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 import study.thirdpartyapiwebclient.common.constants.CustomErrorCode;
 
 public class CustomException extends RuntimeException{
     @Getter
-    private CustomErrorCode customErrorCode;
+    private HttpStatus status;
     @Getter
-    private String errorMessage;
+    private String message;
 
     public CustomException(CustomErrorCode customErrorCode) {
         super(customErrorCode.getMessage());
-        this.customErrorCode = customErrorCode;
-        this.errorMessage = customErrorCode.getMessage();
+        this.status = customErrorCode.getStatus();
+        this.message = customErrorCode.getMessage();
     }
 }
